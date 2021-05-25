@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Books exportDate="2021-02-12T11:20:34.722255">
+  <Book bookId="1009">
+    <title>Alices Adventures in Wonderland</title>
+    <author>Lewis Carroll</author>
+    <category>Children</category>
+    <releaseDate>2008-06-27</releaseDate>
+    <fileSize>150</fileSize>
+    <filePath>C:\Users\טליה\project\Alices Adventures in Wonderland.txt</filePath>
+    <numParagraph>801</numParagraph>
+    <numLines>3269</numLines>
+    <numWords>26433</numWords>
+    <numSentences>3847</numSentences>
+    <numCharacters>146769</numCharacters>
+  </Book>
+  <Book bookId="1010">
+    <title>Dracula</title>
+    <author>Bram Stoker</author>
+    <category>roman</category>
+    <releaseDate>1995-10-01</releaseDate>
+    <fileSize>832</fileSize>
+    <filePath>C:\Users\טליה\project\Dracula.txt</filePath>
+    <numParagraph>1948</numParagraph>
+    <numLines>14795</numLines>
+    <numWords>160242</numWords>
+    <numSentences>21543</numSentences>
+    <numCharacters>821695</numCharacters>
+  </Book>
+  <Book bookId="1011">
+    <title>Little Women</title>
+    <author>Louisa May Alcott</author>
+    <category>Children</category>
+    <releaseDate>1996-05-01</releaseDate>
+    <fileSize>1008</fileSize>
+    <filePath>C:\Users\טליה\project\Little Women.txt</filePath>
+    <numParagraph>3879</numParagraph>
+    <numLines>20373</numLines>
+    <numWords>186345</numWords>
+    <numSentences>24004</numSentences>
+    <numCharacters>990727</numCharacters>
+  </Book>
+  <Book bookId="1012">
+    <title>Peter Pan</title>
+    <author>James Matthew</author>
+    <category>Children</category>
+    <releaseDate>2008-06-25</releaseDate>
+    <fileSize>262</fileSize>
+    <filePath>C:\Users\טליה\project\Peter Pan.txt</filePath>
+    <numParagraph>1</numParagraph>
+    <numLines>2</numLines>
+    <numWords>30</numWords>
+    <numSentences>4</numSentences>
+    <numCharacters>153</numCharacters>
+  </Book>
+  <Book bookId="1013">
+    <title>The Prince and the Pauper</title>
+    <author>Mark Twain</author>
+    <category>Children</category>
+    <releaseDate>2004-07-05</releaseDate>
+    <fileSize>394</fileSize>
+    <filePath>C:\Users\טליה\project\The Prince and the Pauper.txt</filePath>
+    <numParagraph>1467</numParagraph>
+    <numLines>7638</numLines>
+    <numWords>68857</numWords>
+    <numSentences>9270</numSentences>
+    <numCharacters>388077</numCharacters>
+  </Book>
+  <Book bookId="1014">
+    <title>The Secret Garden</title>
+    <author>Frances Hodgson Burnett</author>
+    <category>Children</category>
+    <releaseDate>1994-03-01</releaseDate>
+    <fileSize>463</fileSize>
+    <filePath>C:\Users\טליה\project\The Secret Garden.txt</filePath>
+    <numParagraph>2304</numParagraph>
+    <numLines>9768</numLines>
+    <numWords>83511</numWords>
+    <numSentences>12543</numSentences>
+    <numCharacters>454147</numCharacters>
+  </Book>
+  <Book bookId="1015">
+    <title>the</title>
+    <author>hh</author>
+    <category>kj</category>
+    <releaseDate>2012-11-11</releaseDate>
+    <fileSize>5</fileSize>
+    <filePath>C:\Users\טליה\project\the.txt</filePath>
+    <numParagraph>3</numParagraph>
+    <numLines>6</numLines>
+    <numWords>45</numWords>
+    <numSentences>8</numSentences>
+    <numCharacters>236</numCharacters>
+  </Book>
+</Books>
