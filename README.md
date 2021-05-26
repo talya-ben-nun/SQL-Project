@@ -25,7 +25,8 @@ A system for concordances and text retrieval‏
 ### Search phrases
 ![‏‏Phrases](https://user-images.githubusercontent.com/62221426/118802803-41ee8080-b8ab-11eb-873e-3ffa3112ad55.PNG)
 ### Statistics
-![statistics](https://user-images.githubusercontent.com/62221426/118802842-4e72d900-b8ab-11eb-8b8f-73997af1a244.PNG)
+![statisticsPNG](https://user-images.githubusercontent.com/62221426/119625614-0dcb1080-be13-11eb-9bcf-2a0d1cf95614.PNG)
+
 
 ## Scheme
 ### Entity relationship diagram
