@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,17 +17,15 @@ public class insertTable {
 	static ResultSet rs;
 	static PreparedStatement statementP;
 	static Statement statement;
+	
 
 	public insertTable() throws IOException {
 		ArrayList<Books> booksArr = new ArrayList<Books>();
 		//booksArr.add(new Books(1, "Alices Adventures in Wonderland", "Lewis Carroll", "Children", "2008-06-27", 150,
 				//"q", 1, 1, 1));
-		booksArr.add(new Books(2, "Dracula", "Bram Stoker", "roman", "1995-10-01", 832, "q", 1, 1, 1));
-		booksArr.add(new Books(3, "Little Women", "Louisa May Alcott", "Children", "1996-05-01", 1008, "q", 1, 1, 1));
-		booksArr.add(new Books(4, "Peter Pan", "James Matthew", "Children", "2008-06-25", 262, "q", 1, 1, 1));
-		booksArr.add(
-				new Books(5, "The Prince and the Pauper", "Mark Twain", "Children", "2004-07-05", 394, "q", 1, 1, 1));
-		booksArr.add(new Books(6, "The Secret Garden", "Frances Hodgson Burnett", "Children", "1994-03-01", 463, "q", 1,
+		booksArr.add(new Books(2, "The Little Gingerbread Man", "Carol Moore", "Children", "1995-10-01", 9, "q", 1, 1, 1));
+		
+		booksArr.add(new Books(6, "Jack and the Beanstalk", "Benjamin Tabart's", "Children", "1994-03-01", 9, "q", 1,
 				1, 1));
 		
         //enter the books to the data base at the first time
@@ -44,11 +43,12 @@ public class insertTable {
 				e.printStackTrace();
 			}
 			if (flag == false) {
-				String path = "C:\\Users\\θμιδ\\project\\" + bookname + ".txt";
+				String path = "C:\\Library\\" + bookname + ".txt";
 				insertTableFunc(booksArr.get(i).getTitle(), booksArr.get(i).getAuthor(), booksArr.get(i).getCategory(),
 						booksArr.get(i).getReleaseDate(), booksArr.get(i).getFileSize(), path);
 			}
 		}
+		
 	}
 
 	/*
@@ -66,23 +66,67 @@ public class insertTable {
 
 		in = new BufferedReader(new FileReader(path2));
 		line = in.readLine();
-
+		ArrayList<String> sentencesList = new ArrayList<String>();
 		while (line != null) {
+			System.out.println(lines);
 			if (line.equals("")) {
 				paragraphs++;
+				sentencesList.add(" ");
 			} else {
+				sentencesList.add(line);
 				characterCount += line.length();
+				
+				
+//				String[] wordList = line.split("\\s+");
+//				countWord += wordList.length;
 
-				String[] wordList = line.split("\\s+");
-				countWord += wordList.length;
-
-				String[] sentenceList = line.split("[!?.:]+");
-				sentenceCount += sentenceList.length;
+//				String[] sentenceList = line.split("[!?.:]+");
+//				sentenceCount += sentenceList.length;
 			}
-
 			lines++;
 			line = in.readLine();
 		}
+		
+		int countS=0;
+		int countP=1;
+		int numberSen=1;
+		String[] SENTENCE;
+		String[] sentenceArray = sentencesList.toArray(new String[sentencesList.size()]);
+		for (int r=0;r<sentenceArray.length;r++)
+	       {
+//				if(sentenceArray[r]=="")
+//					p++;
+				SENTENCE = sentenceArray[r].split("(?<=[.!?])\\s*");
+	            for(int i=0;i<SENTENCE.length;i++) {
+	        	   String strS = SENTENCE[i];
+	        	   if(strS==" ") {
+	        		   countP++;
+	        		   numberSen=0;
+	        		   sentenceCount--;
+	        	   }
+	        	   countS++;
+	        	   
+	        	   String insertWords = "insert into sentences(word, title, paragraph, sentence, senInPar) values (?,?,?,?,?);; ";
+	        	   try {
+			   			PreparedStatement stmtWords = SqlCon.getConnection().prepareStatement(insertWords);
+			   			stmtWords.setString(1, strS);
+			   			stmtWords.setString(2, title2);
+			   			if(strS==" ")
+			   				stmtWords.setInt(3, 0);
+			   			else
+			   				stmtWords.setInt(3, countP);
+			   			stmtWords.setInt(4, countS);
+			   			stmtWords.setInt(5, numberSen);
+			   			stmtWords.executeUpdate();
+				   		} catch (SQLException e) {
+				   			
+				   		}
+		           sentenceCount++;
+		           numberSen++;
+		        	   countWord += SENTENCE[i].length(); 
+	           }
+	           
+	       }
 
 		String str = "insert into books(title, author, category, releaseDate, fileSize, filePath, numParagraph, numLines, numWords, numSentences,numCharacters) values (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?);; ";
 				//+ "where not exists ( SELECT * FROM books where title = title2 and author = author2 and category = category2 and releaseDate=releaseDate2 and fileSize=fileSize2 and filePath=filePath2 and numParagraph =paragraphs and numLines=lines and numWords=countWord and numSentences =sentenceCount and numCharacters =characterCount);;";
@@ -103,8 +147,9 @@ public class insertTable {
 
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			
 		}
+		//ViewWords.showListTitels();
 	}
 
 	/*
@@ -117,7 +162,7 @@ public class insertTable {
 			stmt.setString(1, name);
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			//System.out.println(e.getMessage());
 		}
 
 	}
@@ -134,7 +179,6 @@ public class insertTable {
 			rs = statementP.executeQuery();
 			rs.next();
 			bid = rs.getInt("bookId");
-			System.out.println(bid + t);
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
