@@ -26,7 +26,7 @@ import javax.swing.border.LineBorder;
 public class Statistics {
 
 	JPanel general;
-	Border border = new LineBorder(Color.white, 1, true);
+	Border border = new LineBorder(Color.white, 5, true);
 	static Statement statement;
 	static ResultSet rs;
 	int count = 0;
@@ -67,26 +67,36 @@ public class Statistics {
 	JLabel wordS2=new JLabel(" ");
 	JLabel lettersS2=new JLabel(" ");
 	
+	static JComboBox bookList;
+	
 	public Statistics() {
 		buttonStatics();
 	}
 
 	//all the buttons of statistics paper 
 	public void buttonStatics() {
-		JLabel j1 = new JLabel("General Statistics");
-		j1.setBounds(260, 15, 200, 20);
-		font = j1.getFont();
-		j1.setForeground(Color.white);
-		j1.setFont(font.deriveFont(Font.PLAIN, 18f));
-		JTabbedPaneFrame.panel5.add(j1);
+//		JLabel j1 = new JLabel("General Statistics");
+//		j1.setBounds(340, 230, 200, 40);
+//		font = j1.getFont();
+//		j1.setForeground(Color.gray);
+//		j1.setFont(font.deriveFont(Font.PLAIN, 18f));
+//		JTabbedPaneFrame.panel5.add(j1);
+		
+		
+		JLabel j2 = new JLabel("Books Statistics");
+		j2.setBounds(340, 25, 230, 80);
+		font = j2.getFont();
+		j2.setForeground(Color.gray);
+		j2.setFont(font.deriveFont(Font.BOLD, 24f));
+		JTabbedPaneFrame.panel5.add(j2);
 
 		general = new JPanel();
-		general.setBounds(245, 40, 400, 200);
+		general.setBounds(265, 85, 400, 200);
 		general.setBorder(border);
-		general.setBackground(Color.black);
+		general.setBackground(Color.gray);
 		JTabbedPaneFrame.panel5.add(general);
 		general.setLayout(null);
-
+		
 		JLabel total = new JLabel("Total Books:");
 		total.setBounds(10, 20, 150, 30);
 		total.setFont(font.deriveFont(Font.PLAIN, 16f));
@@ -107,9 +117,9 @@ public class Statistics {
 		average.setFont(font.deriveFont(Font.PLAIN, 16f));
 		average.setForeground(Color.white);
 		
-		JButton represh = new JButton("represh");//set the results in the "general" window 
-		represh.setBounds(300, 170, 90, 20);
-		general.add(represh);
+		JButton refresh = new JButton("refresh");//set the results in the "general" window 
+		refresh.setBounds(300, 170, 90, 20);
+		general.add(refresh);
 		
 		
 		JLabel total2 = new JLabel();//the result to: Total Books
@@ -136,7 +146,7 @@ public class Statistics {
 		average2.setForeground(Color.pink);
 		general.add(average2);
 		
-		represh.addActionListener(new ActionListener() {
+		refresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				countData(SqlCon.COUNT_ROWS);
 				String st = String.valueOf(count);
@@ -169,17 +179,10 @@ public class Statistics {
 		general.add(average);
 
 
-		JLabel j2 = new JLabel("Book Statistics");
-		j2.setBounds(55, 270, 200, 20);
-		font = j2.getFont();
-		j2.setForeground(Color.white);
-		j2.setFont(font.deriveFont(Font.PLAIN, 18f));
-		JTabbedPaneFrame.panel5.add(j2);
-
 		spesific = new JPanel();
-		spesific.setBounds(30, 295, 825, 420);
+		spesific.setBounds(35, 295, 825, 420);
 		spesific.setBorder(border);
-		spesific.setBackground(Color.black);
+		spesific.setBackground(Color.gray);
 		JTabbedPaneFrame.panel5.add(spesific);
 		spesific.setLayout(null);
 
@@ -191,7 +194,7 @@ public class Statistics {
 
 		showListTitel();
 
-		JComboBox bookList = new JComboBox(booksList);
+		bookList = new JComboBox(booksList);
 		bookList.setSelectedIndex(0);
 		// petList.addActionListener();
 		bookList.setFont(font.deriveFont(Font.PLAIN, 16f));
@@ -244,13 +247,13 @@ public class Statistics {
 				lettersP2.setText(st2);
 				
 				
-				totalP2.setBounds(200, 296, 150, 30);
+				totalP2.setBounds(205, 296, 150, 30);
 				totalP2.setFont(font.deriveFont(Font.PLAIN, 16f));
 				totalP2.setForeground(Color.pink);
-				wordP2.setBounds(200, 336, 150, 30);
+				wordP2.setBounds(205, 336, 150, 30);
 				wordP2.setFont(font.deriveFont(Font.PLAIN, 16f));
 				wordP2.setForeground(Color.pink);
-				lettersP2.setBounds(200, 376, 150, 30);
+				lettersP2.setBounds(205, 376, 150, 30);
 				lettersP2.setFont(font.deriveFont(Font.PLAIN, 16f));
 				lettersP2.setForeground(Color.pink);
 				
@@ -337,15 +340,15 @@ public class Statistics {
 		JLabel wordP = new JLabel("Average Words in Paragraph:");
 		JLabel lettersP = new JLabel("Average Letters in Paragraph:");
 		
-		totalP.setBounds(5, 300, 150, 20);
+		totalP.setBounds(10, 300, 150, 20);
 		totalP.setFont(font.deriveFont(Font.PLAIN, 14f));
 		totalP.setForeground(Color.white);
 		
-		wordP.setBounds(5, 340, 190, 20);
+		wordP.setBounds(10, 340, 190, 20);
 		wordP.setFont(font.deriveFont(Font.PLAIN, 14f));
 		wordP.setForeground(Color.white);
 		
-		lettersP.setBounds(5, 380, 190,20);
+		lettersP.setBounds(10, 380, 190,20);
 		lettersP.setFont(font.deriveFont(Font.PLAIN, 14f));
 		lettersP.setForeground(Color.white);
 		
