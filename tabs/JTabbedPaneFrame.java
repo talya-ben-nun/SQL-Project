@@ -33,33 +33,49 @@ public class JTabbedPaneFrame extends JFrame {
 	
 
 	public JTabbedPaneFrame() throws IOException {
+		//ImageIcon icon = new ImageIcon("java-swing-tutorial.JPG");
+
 		f = new JFrame();
 		tp = new JTabbedPane();
-		tp.setBounds(50, 50, 890, 890);
+		tp.setBounds(30, 30, 900, 800);
+		tp.setBackground(Color.WHITE);
+		Border border = new LineBorder(Color.gray, 25, true);
+		Border border2 = new LineBorder(Color.gray, 7, true);
+
 		panel1 = new JPanel();
 		panel1.setLayout(null);
-		panel1.setBackground(Color.black);
+		panel1.setBackground(Color.pink);
+		panel1.setBorder(border);
+		
 		
 		panel2 = new JPanel();
-		panel2.setBackground(Color.black);
+		panel2.setBackground(Color.pink);
 		panel2.setLayout(null);
+		panel2.setBorder(border2);
+
 		
 		panel3 = new JPanel();
-		panel3.setBackground(Color.black);
+		panel3.setBackground(Color.pink);
 		panel3.setLayout(null);
+		panel3.setBorder(border);
+
 		
 		panel4 = new JPanel();
-		panel4.setBackground(Color.black);
+		panel4.setBackground(Color.pink);
 		panel4.setLayout(null);
+		panel4.setBorder(border);
+
 		
 		panel5 = new JPanel();
-		panel5.setBackground(Color.black);
+		panel5.setBackground(Color.pink);
 		panel5.setLayout(null);
+		panel5.setBorder(border);
+
 		
-		tp.add("Insert Book", panel1);
-		tp.add("View Words", panel2);
-		tp.add("Word Groups", panel3);
-		tp.add("Search Phrases", panel4);
+		tp.add("Insert", panel1);
+		tp.add("Search", panel2);
+		tp.add("Groups", panel3);
+		tp.add("Phrases", panel4);
 		tp.add("Statistics", panel5);
 		
 		new InsertBook();
@@ -77,10 +93,10 @@ public class JTabbedPaneFrame extends JFrame {
 		JButton export=new JButton("Export");
 		JButton importt=new JButton("Import");
 		
-		export.setBounds(55, 15, 75, 25);
+		export.setBounds(765, 20, 75, 25);
 		f.add(export);
 		
-		importt.setBounds(137, 15, 75, 25);
+		importt.setBounds(855, 20, 75, 25);
 		f.add(importt);
 		
 		XmlExportImport exportImport = new XmlExportImport();
