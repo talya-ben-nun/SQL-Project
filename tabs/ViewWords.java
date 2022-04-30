@@ -1,7 +1,9 @@
 package sqlP;
 
 import java.awt.Color;
+
 import java.awt.Font;
+import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -16,9 +18,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import javax.swing.AbstractListModel;
 import javax.swing.DefaultListModel;
@@ -45,7 +53,7 @@ import javax.swing.text.Highlighter.HighlightPainter;
 import javax.swing.text.TextAction;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
+import java.util.stream.*;  
 public class ViewWords {
 
 	JLabel j1;
@@ -74,23 +82,25 @@ public class ViewWords {
 
 	static String[] booksList2;
 	int check;
+	static JComboBox B;
+	static JComboBox bookList;
 
 	public ViewWords() {
 		buttonsView();
 	}
 
 	public void buttonsView() {
-		j1 = new JLabel("Word By Index");
-		j1.setBounds(400, 5, 200, 20);
+		j1 = new JLabel("Search By Index");
+		j1.setBounds(400, 10, 200, 30);
 		Font font = j1.getFont();
-		j1.setForeground(Color.white);
-		j1.setFont(font.deriveFont(Font.BOLD, 14f));
+		j1.setForeground(Color.gray);
+		j1.setFont(font.deriveFont(Font.BOLD, 18f));
 		JTabbedPaneFrame.panel2.add(j1);
 
 		JPanel words = new JPanel();
-		words.setBounds(10, 25, 870, 130);
+		words.setBounds(10, 35, 870, 130);
 		words.setBorder(border);
-		words.setBackground(Color.black);
+		words.setBackground(Color.gray);
 		JTabbedPaneFrame.panel2.add(words);
 		words.setLayout(null);
 
@@ -100,8 +110,9 @@ public class ViewWords {
 		bookFilter.setForeground(Color.white);
 		words.add(bookFilter);
 
+		
 		showListTitels();
-		JComboBox bookList = new JComboBox(booksList2);
+		bookList = new JComboBox(booksList2);
 		bookList.setSelectedIndex(1);
 		bookList.setBounds(50, 25, 190, 20);
 		words.add(bookList);
@@ -113,29 +124,29 @@ public class ViewWords {
 		words.add(parag);
 
 		JTextField P = new JTextField(20);
-		P.setBounds(330, 25, 100, 20);
+		P.setBounds(330, 25, 50, 20);
 		P.setFont(font.deriveFont(Font.BOLD, 15f));
 		words.add(P);
 
-		JLabel line = new JLabel("Line In Paragraph:");
-		line.setBounds(447, 20, 120, 30);
+		JLabel line = new JLabel("Sentence In Paragraph:");
+		line.setBounds(397, 20, 170, 30);
 		line.setFont(font.deriveFont(Font.PLAIN, 15f));
 		line.setForeground(Color.white);
 		words.add(line);
 
 		JTextField L = new JTextField(20);
-		L.setBounds(567, 25, 100, 20);
+		L.setBounds(567, 25, 50, 20);
 		L.setFont(font.deriveFont(Font.BOLD, 15f));
 		words.add(L);
 
-		JLabel lineInd = new JLabel("Index In Line:");
-		lineInd.setBounds(677, 20, 92, 30);
+		JLabel lineInd = new JLabel("Index In Sentence:");
+		lineInd.setBounds(627, 20, 120, 30);
 		lineInd.setFont(font.deriveFont(Font.PLAIN, 15f));
 		lineInd.setForeground(Color.white);
 		words.add(lineInd);
 
 		JTextField LI = new JTextField(20);
-		LI.setBounds(762, 25, 100, 20);
+		LI.setBounds(762, 25, 50, 20);
 		LI.setFont(font.deriveFont(Font.BOLD, 15f));
 		words.add(LI);
 
@@ -151,7 +162,7 @@ public class ViewWords {
 		W.setForeground(Color.pink);
 		words.add(W);
 
-		JButton enter = new JButton("Enter");
+		JButton enter = new JButton("Find");
 		enter.setBounds(715, 100, 70, 25);
 		words.add(enter);
 
@@ -159,61 +170,60 @@ public class ViewWords {
 		clear.setBounds(790, 100, 70, 25);
 		words.add(clear);
 
-		JButton clear2 = new JButton("Clear");
-		clear2.setBounds(225, 675, 650, 25);
-		JTabbedPaneFrame.panel2.add(clear2);
-
-		
-
 		JLabel book = new JLabel("Book:");
-		book.setBounds(15, 195, 60, 30);
-		book.setFont(font.deriveFont(Font.PLAIN, 15f));
-		book.setForeground(Color.white);
+		book.setBounds(15, 215, 60, 30);
+		book.setFont(font.deriveFont(Font.BOLD, 15f));
+		book.setForeground(Color.gray);
 		JTabbedPaneFrame.panel2.add(book);
 
 		Statistics.showListTitel();
-		JComboBox B = new JComboBox(Statistics.booksList);
+		B = new JComboBox(Statistics.booksList);
 		B.setSelectedIndex(0);
-		B.setBounds(60, 200, 155, 20);
+		B.setBounds(60, 220, 155, 20);
 		JTabbedPaneFrame.panel2.add(B);
 
-		JButton enter2 = new JButton("Enter");
-		enter2.setBounds(15, 228, 200, 25);
+		JButton enter2 = new JButton("Show Words");
+		enter2.setBounds(15, 248, 200, 25);
 		JTabbedPaneFrame.panel2.add(enter2);
 
 		list1.setForeground(Color.white);
-		list1.setBackground(Color.black);
+		list1.setBackground(Color.gray);
 		jsp = new JScrollPane(list1);
-		jsp.setBounds(15, 260, 200, 440);
+		jsp.setBounds(15, 280, 200, 440);
 		JTabbedPaneFrame.panel2.add(jsp);
 		
-		JLabel indexByWord = new JLabel("Index By Word");
-		indexByWord.setBounds(400, 170, 200, 20);
-		indexByWord.setFont(font.deriveFont(Font.BOLD, 15f));
-		indexByWord.setForeground(Color.white);
+		JLabel indexByWord = new JLabel("Search By Word");
+		indexByWord.setBounds(400, 185, 200, 30);
+		indexByWord.setFont(font.deriveFont(Font.BOLD, 18f));
+		indexByWord.setForeground(Color.gray);
 		JTabbedPaneFrame.panel2.add(indexByWord);
 
 
-		Object column[] = { "Book", "Paragraph", "Line", "Index In Line" };
+		Object column[] = { "Book", "Paragraph", "Sentence", "Index In Sentence" };
 		Object data[][] = { { "Row1-Column1", "Row1-Column2", "Row1-Column3" } };
 
 		mTableModel = new DefaultTableModel(data, column);
 		JTable table = new JTable(mTableModel);
 		JScrollPane scrollPane = new JScrollPane(table);
-		scrollPane.setBounds(225, 200, 650, 115);
+		scrollPane.setBounds(225, 220, 650, 115);
 		JTabbedPaneFrame.panel2.add(scrollPane);
 		mTableModel.removeRow(0);
 
-		JButton clearTable = new JButton("Clear Results");
-		clearTable.setBounds(225, 315, 650, 25);
+		JButton clearTable = new JButton("Clear");
+		clearTable.setBounds(225, 335, 650, 25);
 		JTabbedPaneFrame.panel2.add(clearTable);
 
-		area.setBackground(Color.black);
+		area.setBackground(Color.gray);
 		area.setFont(font.deriveFont(Font.PLAIN, 15f));
 		area.setForeground(Color.white);
 		jsp2 = new JScrollPane(area);
-		jsp2.setBounds(225, 355, 650, 310);
+		jsp2.setBounds(225, 375, 650, 320);
 		JTabbedPaneFrame.panel2.add(jsp2);
+		
+		JButton clear2 = new JButton("Clear");
+		clear2.setBounds(225, 695, 650, 25);
+		JTabbedPaneFrame.panel2.add(clear2);
+
 		
 		//Displays a word by index
 		enter.addActionListener(new ActionListener() {
@@ -283,9 +293,11 @@ public class ViewWords {
 					sumWords(title);
 					Arrays.fill(arr, " ");
 					int index = 0;
-					for (String name : hmap.keySet()) {
-						String key = name.toString();
-						String value = hmap.get(name).toString();
+					TreeMap<String, Integer> sorted = new TreeMap<>();
+					sorted.putAll(hmap);
+					for (Map.Entry<String, Integer> entry : sorted.entrySet()) {
+						String key = entry.getKey().toString();
+						String value = entry.getValue().toString();
 						String str = ("  " + key + "  " + "(" + value + ")");
 						arr[index++] = str;
 					}
@@ -296,8 +308,10 @@ public class ViewWords {
 							listModel.addElement(arr[i]);
 						}
 					}
+					
 					list1.repaint();
 					list1.setModel(listModel);
+					
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -378,52 +392,46 @@ public class ViewWords {
 		BufferedReader in2;
 		int paragraphs2 = 0;
 		Highlighter h = area.getHighlighter();
+		int i=-1;
+		int countS=1;
+		int ind1 = 0;
+	    int ind2 = 0;
+	    int sum=0;
 		try {
-			statementP = SqlCon.getConnection().prepareStatement(SqlCon.PATH_ACORDING_TITLE);
-			statementP.setString(1, bookName);
-			rs = statementP.executeQuery();
-			while (rs.next()) {
-				String path3 = rs.getString("filePath");
-				in2 = new BufferedReader(new FileReader(path3));
-				line2 = in2.readLine();
-				int sum = 0;
-				int flag2 = 0;
-				int ind1 = 0;
-				int ind2 = 0;
-				if (value != 1) {
-					sum++;
-				}
-				while (line2 != null && flag2 != 1) {
-					if ((value != 1 && paragraphs2 == value - 2) || paragraphs2 == value - 1
-							|| (value != check && paragraphs2 == value)) {// show sum paragraphs around the word
-						while (line2 != null && !(line2.equals(""))) {
-							if (lines2 == numLine - 1) {
-								String[] wordLine = line2.split(" ");
-								for (int i = 0; i < indexL - 1; i++) {
-									sum += wordLine[i].length();
-								}
-								ind1 = sum + indexL - 1;
-								ind2 = ind1 + wordLine[indexL - 1].length();
+			while(i< 2) {
+				if(value==1)
+					i++;
+				statementP = SqlCon.getConnection().prepareStatement(SqlCon.TEXT_ACCORDING_PARAGRAPH);
+				statementP.setString(1, bookName);
+				statementP.setInt(2, value +i);
+				rs = statementP.executeQuery();
+				while (rs.next()) {
+					System.out.println(indexL);
+					area.append(rs.getString(1));
+					area.append("\n");
+	                area.requestFocus();
+					if(i==0)//in corrent paragraph
+					{
+						if(numLine==countS)
+						{
+							String[] wordLine = rs.getString(1).split(" ");
+							for (int j = 0; j < indexL-1; j++) {
+								System.out.println(wordLine[j]);
+								sum += wordLine[j].length();
 							}
-							sum += line2.length() + 1;
-							area.append(line2 + "\n");
-							line2 = in2.readLine();
-							lines2++;
+							ind1= indexL-1 +sum;
+							ind2 = ind1 + wordLine[indexL-1].length();
 						}
-						area.append("\n");
+						countS++;
 					}
-					if (line2 != null && line2.equals("")) {
-						paragraphs2++;
-					}
-					if (line2 != null && flag2 != 1) {
-
-						line2 = in2.readLine();
-						lines2++;
-					}
+					sum+=rs.getString(1).length()+1;
+				h.addHighlight(ind1, ind2, new DefaultHighlighter.DefaultHighlightPainter(Color.yellow));// highlight the spesific word that the user look for
+				
 				}
-				h.addHighlight(ind1, ind2, DefaultHighlighter.DefaultPainter);// highlight the spesific word that the user look for
+				
+				i++;
 			}
-		} catch (IOException | SQLException | BadLocationException e) {
+		} catch (SQLException | BadLocationException e) {
 			e.printStackTrace();
 		}
 	}
@@ -455,62 +463,48 @@ public class ViewWords {
 	/*
 	 * mark to know if ViewWords or InsertBook send to the function
 	 *             insertBook is zero, ViewWords is one.
-	 * @throws IOException pass all the books in the db according the filePath and
+	 * @throws IOException pass all the books in the db and
 	 *                     search the word that accepted.
 	 */
 	public static void searchWord(String word, int mark) throws IOException {
-		String line;
-		BufferedReader in;
-		Connection conn = null;
 		int flag = 0;
 		InsertBook.bookAccordingWord.clear();
+		
 		try {
+			String wordSearch = "%" + removeSign(word)+" "+"%";
 			if (mark == 0) {
-				statement = SqlCon.getConnection().createStatement();
-				rs = statement.executeQuery(SqlCon.SELECT_PATH);
-
+				System.out.println("dd");
+				statementP = SqlCon.getConnection().prepareStatement(SqlCon.ALL_WORDS);
+				statementP.setString(1, wordSearch);
+				rs = statementP.executeQuery();
 			} else {
-				statementP = SqlCon.getConnection().prepareStatement(SqlCon.PATH_ACORDING_TITLE);
+				
+				statementP = SqlCon.getConnection().prepareStatement(SqlCon.SEARCH_WORD);
 				statementP.setString(1, title2);
+				statementP.setString(2, wordSearch);
 				rs = statementP.executeQuery();
 			}
+			
 			while (rs.next()) {
-				String path = rs.getString("filePath");
-				in = new BufferedReader(new FileReader(path));
-				line = in.readLine();
-				while (line != null && flag != 1) {
-					if (line.equals("")) {
-						paragraphs++;
-					} else {
-						String[] wordList = line.split("\\s+");
-						for (int i = 0; i < wordList.length && flag != 1; i++) {
-							String newWord = wordList[i];
-							newWord = newWord.replaceAll("[^\\p{IsDigit}\\p{IsAlphabetic}]", "");
-							// System.out.println(newWord);
-							if (newWord.toLowerCase().equals(word)) {
-
-								if (mark == 0) {
-									InsertBook.bookAccordingWord.add(path);
-									flag = 1;
-								} else {
-										Object[] rows;
-										int p = paragraphs;
-										int l = lines;
-										int il = i + 1;
-										rows = new Object[] { title2, p, l, il };
-										// add the temp row to the table
-										mTableModel.addRow(rows);
-								}
-							}
-						}
+				int si= 0;
+				String [] arr = rs.getString("word").split(" ");
+				for(int i=0; i< arr.length; i++) {
+					
+					if(arr[i].equals(word)) {
+						if (mark == 0) {
+							InsertBook.bookAccordingWord.add(rs.getString(1));
+							flag = 1;
+						} else {
+						System.out.println(arr[i]);
+						si=i+1;
+						Object[] rows = new Object[] { title2, rs.getInt(2), rs.getInt(3), si };	
+						mTableModel.addRow(rows);
 					}
-					lines++;
-					line = in.readLine();
 				}
-				flag = 0;
-				paragraphs = 1;
-				lines = 1;
+				
 			}
+			}
+			flag = 0;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -519,52 +513,62 @@ public class ViewWords {
 	/*
 	 * return word according place that enter from the user, if the location not found the system will print warning massage
 	 */
-	public static String wordIndex(String title, int p, int l, int li) throws IOException {
-		String line;
-		BufferedReader in;
-		int flag = 0;
-		int countP = 1;
-		int countL = 1;
-		int worning = 0;
+	public static String wordIndex(String title, int p, int s, int si) throws IOException {
+//		String line;
+//		BufferedReader in;
+//		int flag = 0;
+//		int countP = 1;
+//		int countL = 1;
+		int worning = 1;
 		String found = " ";
 		try {
-			statementP = SqlCon.getConnection().prepareStatement(SqlCon.PATH_ACORDING_TITLE);
+			statementP = SqlCon.getConnection().prepareStatement(SqlCon.WORD_INDEX);
 			statementP.setString(1, title);
+			statementP.setInt(2, p);
+			statementP.setInt(3, s);
 			rs = statementP.executeQuery();
 			while (rs.next()) {
-				String path = rs.getString("filePath");
-				in = new BufferedReader(new FileReader(path));
-				line = in.readLine();
-				while (line != null && flag != 1) {
-					if (countP == p) {
-						while ((l > countL) && (!(line.equals("")))) {
-							line = in.readLine();
-							countL++;
-						}
-						if (l == countL && (!(line.equals("")))) {
-							System.out.println("iff l=cont");
-							String[] str = line.split(" ");
-							if (li > str.length) {
-								System.out.println("wor1");
-								worning = 1;
-								flag = 1;
-							} else {
-								found = str[li - 1];
-								found = found.replaceAll("[^\\p{IsDigit}\\p{IsAlphabetic}]", "");
-								flag = 1;
-							}
-						} else {
-							worning = 1;
-							flag = 1;
-						}
-
-					} else if (line.equals("")) {
-						countP++;
-						line = in.readLine();
-					} else
-						line = in.readLine();
+				System.out.println(rs.getString("word"));
+				String [] arr = rs.getString("word").split(" ");
+				if(si<=arr.length)
+				{
+					found= arr[si-1];
+					worning = 0;
 				}
+				
+//				String path = rs.getString("filePath");
+//				in = new BufferedReader(new FileReader(path));
+//				line = in.readLine();
+//				while (line != null && flag != 1) {
+//					if (countP == p) {
+//						while ((l > countL) && (!(line.equals("")))) {
+//							line = in.readLine();
+//							countL++;
+//						}
+//						if (l == countL && (!(line.equals("")))) {
+//							String[] str = line.split(" ");
+//							if (li > str.length) {
+//								System.out.println("wor1");
+//								worning = 1;
+//								flag = 1;
+//							} else {
+//								found = str[li - 1];
+//								found = found.replaceAll("[^\\p{IsAlphabetic}]", "");
+//								flag = 1;
+//							}
+//						} else {
+//							worning = 1;
+//							flag = 1;
+//						}
+//
+//					} else if (line.equals("")) {
+//						countP++;
+//						line = in.readLine();
+//					} else
+//						line = in.readLine();
+//				}
 			}
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -572,6 +576,7 @@ public class ViewWords {
 			f = new JFrame();
 			JOptionPane.showMessageDialog(f, "Not Found", "Alert", JOptionPane.WARNING_MESSAGE);
 		}
+		found=removeSign(found);
 		return found;
 	}
 
@@ -585,41 +590,36 @@ public class ViewWords {
 		try {
 			if (title.equals("all")) {
 				statement = SqlCon.getConnection().createStatement();
-				rs = statement.executeQuery(SqlCon.SELECT_PATH);
+				rs = statement.executeQuery(SqlCon.SHOW_TEXT);
 			} else {
-				statementP = SqlCon.getConnection().prepareStatement(SqlCon.PATH_ACORDING_TITLE);
+				statementP = SqlCon.getConnection().prepareStatement(SqlCon.TEXT_ACCORDING_TITLE);
 				statementP.setString(1, title);
 				rs = statementP.executeQuery();
 			}
 
             // for each row returned
 			while (rs.next()) {
-				String path = rs.getString("filePath");
-				in = new BufferedReader(new FileReader(path));
-				line = in.readLine();
-				while (line != null) {
-					if (!(line.equals(""))) {
-						String[] wordList;
-						String sentenceList[] = line.split("[   \n'/'(){}#&@*$%^~!?,'.:;_﻿-]+");
-						for (int i = 0; i < sentenceList.length; i++) {
-							wordList = sentenceList[i].split("\\s+");
-							for (int j = 0; j < wordList.length; j++) {
-								wordList[j] = wordList[j].replaceAll("[^\\p{IsDigit}\\p{IsAlphabetic}]", "");
-								if (!(wordList[j].equals(""))) {
-									wordList[j] = wordList[j].toLowerCase();
-									count = hmap.containsKey(wordList[j]) ? hmap.get(wordList[j]) : 0;
-									hmap.put(wordList[j], count + 1);
+				String sent = rs.getString(1);
+					if (!(sent.equals(""))) {
+						String[] wordList = sent.split("\\s+");
+						for (int i = 0; i < wordList.length; i++) {
+							String newWord = wordList[i];
+							newWord = newWord.replaceAll("[^\\p{IsDigit}\\p{IsAlphabetic}]", "");
+							if (!(newWord.equals(""))) {
+								newWord = newWord.toLowerCase();
+								count = hmap.containsKey(newWord) ? hmap.get(newWord) : 0;
+								hmap.put(newWord, count + 1);
 								}
 							}
-						}
 					}
-					lines++;
-					line = in.readLine();
 				}
-			}
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
 	}
 
+	public static String removeSign(String word) {
+		word=word.replaceAll("[^\\p{IsDigit}\\p{IsAlphabetic}]", "");
+		return word;
+	}
 }
