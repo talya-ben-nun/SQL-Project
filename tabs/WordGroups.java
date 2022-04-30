@@ -52,7 +52,7 @@ public class WordGroups {
 	JScrollPane jsp2 = new JScrollPane();
 	static String[] array = new String[100000];
 	String array2[];
-	Border border = new LineBorder(Color.white, 1, true);
+	Border border = new LineBorder(Color.white, 10, true);
 	JFrame f;
 	Statement statement;
 	PreparedStatement statementP;
@@ -61,7 +61,6 @@ public class WordGroups {
 	JList list1 = new JList();
 	JScrollPane jsp = new JScrollPane();
 	DefaultListModel listModel = new DefaultListModel();
-	//String groupIns = "";
 	
 	
 	DefaultTableModel mTableModel;
@@ -77,18 +76,18 @@ public class WordGroups {
 		JPanel groups = new JPanel();
 		groups.setBounds(70, 100, 750, 300);
 		groups.setBorder(border);
-		groups.setBackground(Color.black);
+		groups.setBackground(Color.gray);
 		JTabbedPaneFrame.panel3.add(groups);
 		groups.setLayout(null);
 
-		JLabel j1 = new JLabel("Define Word Groups");
-		j1.setBounds(340, 10, 230, 80);
+		JLabel j1 = new JLabel("Define Groups");
+		j1.setBounds(340, 25, 260, 80);
 		Font font = j1.getFont();
-		j1.setForeground(Color.white);
-		j1.setFont(font.deriveFont(Font.PLAIN, 24f));
+		j1.setForeground(Color.gray);
+		j1.setFont(font.deriveFont(Font.BOLD, 24f));
 		JTabbedPaneFrame.panel3.add(j1);
 
-		JLabel group = new JLabel("Insert name group:");
+		JLabel group = new JLabel("Group name:");
 		font = group.getFont();
 		group.setBounds(80, 55, 185, 25);
 		group.setFont(font.deriveFont(Font.PLAIN, 18f));
@@ -104,7 +103,7 @@ public class WordGroups {
 		insert.setBounds(580, 55, 90, 25);
 		groups.add(insert);
 
-		JLabel selecGroup = new JLabel("Group to select:");
+		JLabel selecGroup = new JLabel("Select group:");
 		selecGroup.setBounds(80, 95, 185, 25);
 		selecGroup.setForeground(Color.white);
 		selecGroup.setFont(font.deriveFont(Font.PLAIN, 18f));
@@ -116,7 +115,7 @@ public class WordGroups {
 		groupList.setBounds(260, 95, 300, 25);
 		groups.add(groupList);
 
-		JLabel inserWord = new JLabel("Insert word to group:");
+		JLabel inserWord = new JLabel("Insert word:");
 		inserWord.setBounds(80, 135, 185, 25);
 		inserWord.setForeground(Color.white);
 		inserWord.setFont(font.deriveFont(Font.PLAIN, 18f));
@@ -137,7 +136,7 @@ public class WordGroups {
 		star.setFont(font.deriveFont(Font.PLAIN, 30f));
 		groups.add(star);
 
-		JLabel markWord = new JLabel("Mark word to group:");
+		JLabel markWord = new JLabel("Mark word:");
 		markWord.setBounds(80, 215, 185, 25);
 		markWord.setForeground(Color.white);
 		markWord.setFont(font.deriveFont(Font.PLAIN, 18f));
@@ -172,8 +171,8 @@ public class WordGroups {
 
 		JLabel group2 = new JLabel("Group:");
 		group2.setBounds(70, 430, 60, 30);
-		group2.setFont(font.deriveFont(Font.PLAIN, 15f));
-		group2.setForeground(Color.white);
+		group2.setFont(font.deriveFont(Font.BOLD, 14f));
+		group2.setForeground(Color.gray);
 		JTabbedPaneFrame.panel3.add(group2);
 
 		showListGroups();
@@ -182,38 +181,40 @@ public class WordGroups {
 		G2.setBounds(115, 435, 155, 20);
 		JTabbedPaneFrame.panel3.add(G2);
 
-		JButton enter2 = new JButton("Enter");
+		JButton enter2 = new JButton("Show Group");
 		enter2.setBounds(70, 463, 200, 25);
 		JTabbedPaneFrame.panel3.add(enter2);
 
 		list1.setForeground(Color.white);
-		list1.setBackground(Color.black);
+		list1.setBackground(Color.gray);
 		jsp = new JScrollPane(list1);
 		jsp.setBounds(70, 491, 200, 220);
 		JTabbedPaneFrame.panel3.add(jsp);
 		
 		JButton print = new JButton("Print");
-		print.setBounds(735, 720, 90, 25);
+		print.setBounds(735, 715, 90, 25);
 		JTabbedPaneFrame.panel3.add(print);
 		
-		Object column[] = { "Word", "Title","Paragraph", "Sentence", "Index In Sentence" };
+		Object column[] = { "Word", "Title","Paragraph", "Sentence"};
 		Object data[][] = { { "Row1-Column1", "Row1-Column2", "Row1-Column3" } };
 
 		mTableModel = new DefaultTableModel(data, column);
 		JTable table = new JTable(mTableModel);
+		table.setBackground(Color.gray);
 		JScrollPane scrollPane = new JScrollPane(table);
+		scrollPane.setBackground(Color.gray);
 		scrollPane.setBounds(285, 435, 540, 275);
 		JTabbedPaneFrame.panel3.add(scrollPane);
 		mTableModel.removeRow(0);
 		
-		Object column2[] = { "Word", "Title","Paragraph", "Sentence", "Index In Sentence" };
+		Object column2[] = { "Word", "Title","Paragraph", "Sentence"};
 		Object data2[][] = { { "Row1-Column1", "Row1-Column2", "Row1-Column3" } };
 
 		tableExport = new DefaultTableModel(data2, column2);//the table to be printed
 		table2 = new JTable(tableExport);
 		TableColumnModel columnModel = table2.getColumnModel();
 		columnModel.getColumn(1).setPreferredWidth(190);
-		columnModel.getColumn(4).setPreferredWidth(100);
+		
 		tableExport.removeRow(0);
 		
 		//Enter a user-defined group name
@@ -258,15 +259,14 @@ public class WordGroups {
 				if (word.equals(""))
 					JOptionPane.showMessageDialog(f, "Missing data", "Alert", JOptionPane.WARNING_MESSAGE);
 				else {
-					for (int i = 1; i < Statistics.booksList.length; i++) {
-						String title = Statistics.booksList[i];
+					
 						try {
-							searchWordToGroup(title, word, groupIns);
+							SearchPhrases.searchWordToGroup(word, groupIns);
 						} catch (IOException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
-					}
+					
 				}
 			}
 		});
@@ -317,7 +317,7 @@ public class WordGroups {
 					rs = statementP.executeQuery();
 					Object[] rows2;
 					while (rs.next()) {
-						rows2 = new Object[] { rs.getString(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getInt(5) };
+						rows2 = new Object[] { rs.getString(1), rs.getString(2), rs.getInt(3), rs.getInt(4)};
 						// add the temp row to the table
 						tableExport.addRow(rows2);
 					}
@@ -366,7 +366,7 @@ public class WordGroups {
 			// for each row returned
 			while (rs.next()) {
 				// add the values to the temporary row
-				rows = new Object[] { rs.getString(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getInt(5) };
+				rows = new Object[] { rs.getString(1), rs.getString(2), rs.getInt(3), rs.getInt(4),rs.getInt(5)};
 				// add the temp row to the table
 				mTableModel.addRow(rows);
 			}
@@ -406,57 +406,7 @@ public class WordGroups {
 
 	}
 
-	/*
-	 * Searches all the locations of a particular word to put the data into the database
-	 */
-	public void searchWordToGroup(String title, String word, String groupIns) throws IOException {
-		String line;
-		BufferedReader in;
-		Connection conn = null;
-		int flag = 0;
-		int paragraphs = 1;
-		int sentences = 1;
-		try {
-			System.out.println("func");
-			statementP = SqlCon.getConnection().prepareStatement(SqlCon.PATH_ACORDING_TITLE);
-			statementP.setString(1, title);
-			rs = statementP.executeQuery();
-			while (rs.next()) {
-				String path = rs.getString("filePath");
-				in = new BufferedReader(new FileReader(path));
-				line = in.readLine();
-				while (line != null) {
-					if (line.equals("")) {
-						paragraphs++;
-						sentences = 1;
-					} else {
-						String[] sentenceList = line.split("[!?.:]+");
-						for (int i = 0; i < sentenceList.length; i++) {
-							String[] sentenceList2 = sentenceList[i].split(" ");
-							for (int j = 0; j < sentenceList2.length; j++) {
-								String newWord = sentenceList2[j];
-								String newWord2 = newWord.replaceAll("[^\\p{IsDigit}\\p{IsAlphabetic}]", "");
-								if (newWord2.toLowerCase().equals(word)) {// if the word is found
-									int p = paragraphs;
-									int s = sentences;
-									int is = j + 1;
-									insertTable.insertwordFunc(groupIns, word, title, p, s, is);//send to the function that insert to the database 
-								}
-							}
-						}
-					}
-					sentences++;
-					line = in.readLine();
-				}
-				paragraphs = 1;
-				sentences = 1;
-			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
+	
 	/*
 	 * Prints the data table for a selected group
 	 */
