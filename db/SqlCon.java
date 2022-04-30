@@ -14,7 +14,7 @@ public class SqlCon {
 	public static final String SELECT_PATH = "SELECT filePath FROM books";
 	public static final String TITLE_RESULT = "SELECT title, author, category, releaseDate, fileSize FROM books WHERE title = ?";
 	public static final String AUTHOR_RESULT = "SELECT title,author,category,releaseDate, fileSize FROM books WHERE author = ?";
-	public static final String WORD_RESULT = "SELECT title,author,category,releaseDate, fileSize FROM books WHERE filePath = ?";
+	public static final String WORD_RESULT = "SELECT title,author,category,releaseDate, fileSize FROM books WHERE title = ?";
 	public static final String COUNT_ROWS = "SELECT COUNT(*) FROM books" ;
 	public static final String COUNT_GROUPS = "SELECT COUNT(*) FROM groups" ;
 	public static final String SUM_SIZE = "SELECT SUM(fileSize) FROM books";
@@ -37,6 +37,13 @@ public class SqlCon {
 	public static final String SELECT_WORDS_GROUP = "SELECT word, title, paragraph, sentence, indexSentence FROM words as w, groups as g, wordInGroup as wig WHERE wig.groupId = g.groupId AND w.wordId= wig.wordId AND g.groupName = ? AND w.word = ?";
 	public static final String SELECT_BOOKS="SELECT * FROM books";
 	public static final String CHECK_TITLE = "SELECT title FROM books WHERE title=?";
+	public static final String SEARCH_PHRASES = "SELECT word,title,paragraph, sentence FROM sentences WHERE word like ?";
+	public static final String TEXT_ACCORDING_TITLE ="SELECT word FROM sentences WHERE title= ?";
+	public static final String SHOW_TEXT ="SELECT word FROM sentences";
+	public static final String WORD_INDEX ="SELECT word FROM sentences WHERE title= ? AND paragraph =? AND senInPar =?";
+	public static final String SEARCH_WORD = "SELECT word, paragraph, senInPar FROM sentences WHERE  title=? AND word like ?";
+	public static final String ALL_WORDS = "SELECT title, word, paragraph, senInPar FROM sentences WHERE word like ?";
+	public static final String TEXT_ACCORDING_PARAGRAPH ="SELECT word FROM sentences WHERE title= ? AND paragraph =?";
 	public SqlCon() {
 		
 	}
