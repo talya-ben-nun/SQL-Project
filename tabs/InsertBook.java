@@ -17,11 +17,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import javax.swing.*;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
@@ -34,25 +29,28 @@ public class InsertBook {
 	static ArrayList<String> bookAccordingWord = new ArrayList<String>();
 	DefaultTableModel mTableModel;
 	JButton insertButton;
-	Border border = new LineBorder(Color.white, 1, true);
+	Border border = new LineBorder(Color.white, 5, true);
 	JFrame f;
+	static int flag;
 
 	public InsertBook() {
 		buttonsInsert();
 	}
 
 	public void buttonsInsert() {
-		JLabel j1 = new JLabel("Insert New Book");
-		j1.setBounds(340, 10, 200, 80);
-		Font font = j1.getFont();
-		j1.setForeground(Color.white);
-		j1.setFont(font.deriveFont(Font.PLAIN, 24f));
+		JLabel j1 = new JLabel("New Book");
+		j1.setBounds(370, 30, 200, 80);
+		
+		j1.setForeground(Color.gray);
+		j1.setFont(new Font("SN÷π÷π_chedva", Font.BOLD, 24));
+		//j1.setFont(font.deriveFont(Font.BOLD, 24f));
 		JTabbedPaneFrame.panel1.add(j1);
+		Font font = j1.getFont();
 
 		JPanel insert = new JPanel();
 		insert.setBounds(195, 100, 500, 230);
 		insert.setBorder(border);
-		insert.setBackground(Color.black);
+		insert.setBackground(Color.gray);
 		JTabbedPaneFrame.panel1.add(insert);
 		insert.setLayout(null);
 
@@ -64,7 +62,7 @@ public class InsertBook {
 		JLabel fileSize = new JLabel("File Size In KB:");
 
 		path.setBounds(10, 10, 50, 30);
-		path.setFont(font.deriveFont(Font.BOLD, 15f));
+		path.setFont (font.deriveFont(Font.BOLD, 15f));
 		path.setForeground(Color.white);
 		title.setBounds(10, 40, 50, 30);
 		title.setFont(font.deriveFont(Font.BOLD, 15f));
@@ -137,16 +135,16 @@ public class InsertBook {
 		insert.add(date);
 		insert.add(fileSize);
 
-		JLabel j2 = new JLabel("Inserted Books");
+		JLabel j2 = new JLabel("Existing Books");
 		j2.setBounds(350, 350, 200, 80);
-		j2.setForeground(Color.white);
-		j2.setFont(font.deriveFont(Font.PLAIN, 24f));
+		j2.setForeground(Color.gray);
+		j2.setFont(font.deriveFont(Font.BOLD, 24f));
 		JTabbedPaneFrame.panel1.add(j2);
 
 		JPanel inserted = new JPanel();
-		inserted.setBounds(30, 420, 825, 320);
+		inserted.setBounds(35, 420, 825, 320);
 		inserted.setBorder(border);
-		inserted.setBackground(Color.black);
+		inserted.setBackground(Color.gray);
 		JTabbedPaneFrame.panel1.add(inserted);
 		inserted.setLayout(null);
 
@@ -162,18 +160,18 @@ public class InsertBook {
 		inserted.add(T2);
 
 		JLabel author2 = new JLabel("Author:");
-		author2.setBounds(265, 30, 70, 30);
+		author2.setBounds(295, 30, 70, 30);
 		author2.setFont(font.deriveFont(Font.BOLD, 15f));
 		author2.setForeground(Color.white);
 		inserted.add(author2);
 
 		JTextField A2 = new JTextField(50);
-		A2.setBounds(325, 40, 170, 20);
+		A2.setBounds(355, 40, 170, 20);
 		A2.setFont(font.deriveFont(Font.BOLD, 15f));
 		inserted.add(A2);
 
-		JLabel word = new JLabel("Word Appearance:");
-		word.setBounds(505, 30, 130, 30);
+		JLabel word = new JLabel("Word:");
+		word.setBounds(565, 30, 130, 30);
 		word.setFont(font.deriveFont(Font.BOLD, 15f));
 		word.setForeground(Color.white);
 		inserted.add(word);
@@ -203,6 +201,10 @@ public class InsertBook {
 		table.setRowSelectionAllowed(true);
 		table.setColumnSelectionAllowed(false);
 		
+		JButton clearTable = new JButton("Clear");
+		clearTable.setBounds(640, 280, 75, 20);
+		inserted.add(clearTable);
+		
 		brouse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser chooser = new JFileChooser();
@@ -230,7 +232,7 @@ public class InsertBook {
 					int filesizeIns;
 					filesizeIns = Integer.parseInt(fileSizeIns);
 
-					int flag = 0;
+					flag = 0;
 					try {
 						statement = SqlCon.getConnection().createStatement();
 						ResultSet rs = statement.executeQuery(SqlCon.SELECT_TITLE);
@@ -246,6 +248,13 @@ public class InsertBook {
 						if (flag != 1) {
 							insertTable.insertTableFunc(titleIns, authorIns, categoryIns, releseDateIns, filesizeIns,
 									pathIns);
+							ViewWords.showListTitels();
+							Statistics.showListTitel();
+							ViewWords.B.addItem(titleIns);
+							ViewWords.bookList.addItem(titleIns);
+							SearchPhrases.bookList.addItem(titleIns);
+							Statistics.bookList.addItem(titleIns);
+							
 						}
 					} catch (SQLException e1) {
 						e1.printStackTrace();
@@ -298,11 +307,23 @@ public class InsertBook {
 						e1.printStackTrace();
 					}
 					for (int i = 0; i < bookAccordingWord.size(); i++) {
+						System.out.println(bookAccordingWord.get(i));
 						chouseRes = SqlCon.WORD_RESULT;
 						chouseUse = bookAccordingWord.get(i);
 						func(chouseRes, chouseUse);
 					}
 				}
+			}
+		});
+		
+		clearTable.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (mTableModel.getRowCount() > 0) {
+					for (int i = mTableModel.getRowCount() - 1; i > -1; i--) {
+						mTableModel.removeRow(i);
+					}
+				}
+
 			}
 		});
 		
@@ -312,10 +333,11 @@ public class InsertBook {
 			public void actionPerformed(ActionEvent e) {
 				int row = table.getSelectedRow();
 				String value = table.getModel().getValueAt(row, 0).toString();
-				String path = "C:\\Users\\ËÏÈ‰\\project\\" + value + ".txt";
+				String path = "C:\\Library\\" + value + ".txt";
 				Desktop desktop = Desktop.getDesktop();
 				File file = new File(path);
 				try {
+					
 					desktop.open(file);
 				} catch (IOException e1) {
 					e1.printStackTrace();
