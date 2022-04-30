@@ -1,6 +1,7 @@
 package sqlP;
 
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -9,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -17,6 +19,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Objects;
+import java.util.Scanner;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -38,34 +42,45 @@ import javax.swing.text.Highlighter;
 import javax.swing.text.Highlighter.Highlight;
 
 public class SearchPhrases {
-	Border border = new LineBorder(Color.white, 1, true);
+	Border border = new LineBorder(Color.white, 10, true);
 	DefaultTableModel mTableModel;
 	JTextArea area = new JTextArea();
 	JScrollPane jsp = new JScrollPane();
 	JFrame f;
 	Statement statement;
-	ResultSet rs;
-	PreparedStatement statementP;
+	static ResultSet rs;
+	static PreparedStatement statementP;
 	int x;
 	int y;
 	Highlighter highlighter = area.getHighlighter();
 	String[] arrPhrase;
-	int found = 0;
+	JComboBox<String> phraseList=new JComboBox();
+	static int found = 0;
+	static JComboBox bookList;
 
 	public SearchPhrases() {
 		buttonPhrases();
 	}
 
 	public void buttonPhrases() {
-		JLabel insPhrase = new JLabel("Insert a phrase:");
-		Font font = insPhrase.getFont();
+		
+		JLabel j1 = new JLabel("Define Phrases");
+		j1.setBounds(340, 10, 230, 80);
+		Font font = j1.getFont();
+		j1.setForeground(Color.gray);
+		j1.setFont(font.deriveFont(Font.BOLD, 24f));
+		JTabbedPaneFrame.panel4.add(j1);
+		
+		JLabel insPhrase = new JLabel("New phrase:");
+		Font font2 = insPhrase.getFont();
 		insPhrase.setBounds(70, 85, 150, 20);
-		insPhrase.setForeground(Color.white);
-		insPhrase.setFont(font.deriveFont(Font.PLAIN, 20f));
+		insPhrase.setForeground(Color.gray);
+		insPhrase.setFont(font2.deriveFont(Font.PLAIN, 20f));
 		JTabbedPaneFrame.panel4.add(insPhrase);
 
 		JTextField P = new JTextField(20);
 		P.setBounds(250, 85, 440, 25);
+		P.setBackground(Color.gray);
 		P.setFont(font.deriveFont(Font.BOLD, 15f));
 		JTabbedPaneFrame.panel4.add(P);
 
@@ -73,14 +88,14 @@ public class SearchPhrases {
 		insert.setBounds(710, 85, 90, 25);
 		JTabbedPaneFrame.panel4.add(insert);
 
-		JLabel searPhrase = new JLabel("Phrase to search:");
+		JLabel searPhrase = new JLabel("Search phrase:");
 		searPhrase.setBounds(70, 125, 185, 20);
-		searPhrase.setForeground(Color.white);
+		searPhrase.setForeground(Color.gray);
 		searPhrase.setFont(font.deriveFont(Font.PLAIN, 20f));
 		JTabbedPaneFrame.panel4.add(searPhrase);
 
 		showListPhrases();
-		JComboBox phraseList = new JComboBox(arrPhrase);
+		phraseList = new JComboBox(arrPhrase);
 		phraseList.setSelectedIndex(0);
 		phraseList.setBounds(250, 125, 440, 25);
 		JTabbedPaneFrame.panel4.add(phraseList);
@@ -104,11 +119,11 @@ public class SearchPhrases {
 		JLabel bookFilter = new JLabel("Book:");
 		bookFilter.setBounds(250, 400, 50, 30);
 		bookFilter.setFont(font.deriveFont(Font.PLAIN, 18f));
-		bookFilter.setForeground(Color.white);
+		bookFilter.setForeground(Color.gray);
 		JTabbedPaneFrame.panel4.add(bookFilter);
 
 		ViewWords.showListTitels();
-		JComboBox bookList = new JComboBox(ViewWords.booksList2);
+		bookList = new JComboBox(ViewWords.booksList2);
 		bookList.setSelectedIndex(0);
 		bookList.setBounds(300, 405, 290, 20);
 		JTabbedPaneFrame.panel4.add(bookList);
@@ -117,7 +132,7 @@ public class SearchPhrases {
 		choose.setBounds(600, 405, 90, 20);
 		JTabbedPaneFrame.panel4.add(choose);
 
-		area.setBackground(Color.black);
+		area.setBackground(Color.gray);
 		area.setFont(font.deriveFont(Font.PLAIN, 15f));
 		area.setForeground(Color.white);
 		jsp = new JScrollPane(area);
@@ -139,6 +154,7 @@ public class SearchPhrases {
 			public void actionPerformed(ActionEvent e) {
 				String phrase = P.getText();
 				int flag = 0;
+				int added=0;
 				if (phrase.equals(""))
 					JOptionPane.showMessageDialog(f, "Missing data.", "Alert", JOptionPane.WARNING_MESSAGE);
 				else {
@@ -148,30 +164,27 @@ public class SearchPhrases {
 						while (rs.next()) {
 							String phraseName = rs.getString("word");
 							if (phraseName.equals(phrase)) {
-								// f = new JFrame();
 								JOptionPane.showMessageDialog(f, "This phrase is allready exist.", "Alert",
 										JOptionPane.WARNING_MESSAGE);
 								flag = 1;
+								break;
 							}
 						}
-						if (flag != 1) {
-							for (int i = 1; i < Statistics.booksList.length; i++) {
-								String title = Statistics.booksList[i];
-								try {
-									String phrases = "";
-									searchWordToGroup(title, phrase, phrases);
-								} catch (IOException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
+						if(flag != 1) {
+							System.out.println("jjj");
+							String phrases = "";
+							searchWordToGroup(phrase, phrases);
+							if(found==1 && added ==0) {
+								  phraseList.addItem(phrase);
+								  added = 1;
 								}
-							}
-							if (found == 1) {
-								phraseList.addItem(phrase);
-							} else
-								JOptionPane.showMessageDialog(f, "There is no sentence that contains the phrase.",
-										"Alert", JOptionPane.WARNING_MESSAGE);
+							if(added==0)
+								JOptionPane.showMessageDialog(f, "There is no sentence that contains the phrase.","Alert", JOptionPane.WARNING_MESSAGE);	
 						}
 					} catch (SQLException e1) {
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
@@ -224,7 +237,6 @@ public class SearchPhrases {
 				} catch (BadLocationException ble) {
 				}
 			}
-
 		});
 	}
 
@@ -273,79 +285,49 @@ public class SearchPhrases {
 		for (int j = 1; j < i; j++) {
 			arrPhrase[j] = array[j-1];
 		}
-		for(int k= 0; k<arrPhrase.length;k++)
-			System.out.println(arrPhrase[k]);
 	}
 
 	/*
 	 * show to user the book which choose to give the user option to mark phrases 
 	 */
 	public void writeText(String title) throws BadLocationException {
-		String line2;
-		BufferedReader in2;
 		try {
-			statementP = SqlCon.getConnection().prepareStatement(SqlCon.PATH_ACORDING_TITLE);
+			statementP = SqlCon.getConnection().prepareStatement(SqlCon.TEXT_ACCORDING_TITLE);
 			statementP.setString(1, title);
 			rs = statementP.executeQuery();
 			while (rs.next()) {
-				String path3 = rs.getString("filePath");
-				in2 = new BufferedReader(new FileReader(path3));
-				line2 = in2.readLine();
-				while (line2 != null) {
-					area.append(line2 + "\n");
-					line2 = in2.readLine();
-					if (line2 != null && line2.equals("")) {
-						area.append("\n");
-						line2 = in2.readLine();
-					}
-				}
-			}
-		} catch (IOException | SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/*
-	 * search all the phrases appearense and send them to the insertword function
-	 */
-	public void searchWordToGroup(String title, String word, String groupIns) throws IOException {
-		String line;
-		BufferedReader in;
-		int paragraphs = 1;
-		int sentences = 1;
-		found = 0;
-		try {
-			statementP = SqlCon.getConnection().prepareStatement(SqlCon.PATH_ACORDING_TITLE);
-			statementP.setString(1, title);
-			rs = statementP.executeQuery();
-			while (rs.next()) {
-				String path = rs.getString("filePath");
-				in = new BufferedReader(new FileReader(path));
-				line = in.readLine();
-				while (line != null) {
-					if (line.equals("")) {
-						paragraphs++;
-						sentences = 1;
-					} else {
-						String[] sentenceList = line.split("[!?.:]+");
-						for (int i = 0; i < sentenceList.length; i++) {
-							if (sentenceList[i].contains(word)) {
-								int p = paragraphs;
-								int s = sentences;
-								int is =0;
-								insertTable.insertwordFunc(groupIns, word, title, p, s, is);
-								found = 1;
-							}
-						}
-					}
-					sentences++;
-					line = in.readLine();
-				}
-				paragraphs = 1;
-				sentences = 1;
+				area.append(rs.getString(1));
+				area.append("\n");
+                area.requestFocus();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	public static String removeSign(String word) {
+		word=word.replaceAll("[^\\p{IsDigit}\\p{IsAlphabetic}]", "");
+		return word;
+	}
+	/*
+	 * search all the phrases appearense and send them to the insertword function
+	 */
+	public static void searchWordToGroup(String word, String groupIns) throws IOException {
+		
+		String phraseSearch = "%" + word+"%";
+		found = 0;
+		try {
+			System.out.println(phraseSearch);
+			statementP = SqlCon.getConnection().prepareStatement(SqlCon.SEARCH_PHRASES);
+			statementP.setString(1, phraseSearch);
+			rs = statementP.executeQuery();
+			while (rs.next()) {
+				System.out.println("rs");
+				found=1;
+				insertTable.insertwordFunc(groupIns, word, rs.getString(2), rs.getInt(3), rs.getInt(4),0);
+			}
+		}catch (SQLException e) {
+				e.printStackTrace();
+			}
+		
 	}
 }
